@@ -7,7 +7,16 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  BeforeInsert,
+  BeforeUpdate,
 } from "typeorm";
+import {
+  validateOrReject,
+  IsEmail,
+  IsDefined,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 import { Books } from "./Books";
 
 @Entity("users")
@@ -15,23 +24,36 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
+  @IsDefined()
+  @MaxLength(50, {
+    message: "Title is too long",
+  })
+  @MinLength(5, {
+    message: "Title is too short",
+  })
   first_name: string;
 
-  @Column()
+  @Column({ nullable: false })
+  @IsDefined()
   last_name: string;
 
   @Column({
     unique: true,
   })
+  @IsDefined()
+  @IsEmail()
   email: string;
 
   @Column({
     unique: true,
+    nullable: false,
   })
+  @IsDefined()
   user_name: string;
 
-  @Column()
+  @Column({ nullable: false })
+  @IsDefined()
   password: string;
 
   @OneToMany(() => Books, (books) => books.user)
@@ -42,4 +64,12 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validate() {
+    await validateOrReject(this).catch((errors) => {
+      console.log("Promise rejected (validation failed). Errors: ", errors);
+    });
+  }
 }

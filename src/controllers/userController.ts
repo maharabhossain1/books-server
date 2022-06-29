@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { catchAsync } from "../utils/catchAsync";
 import { User } from "../models/User";
 
-export const getAllUsers = async (req: Request, res: Response) => {
-  try {
+export const getAllUsers: any = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
     const users = await User.find();
 
@@ -14,16 +15,11 @@ export const getAllUsers = async (req: Request, res: Response) => {
         users,
       },
     });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err,
-    });
   }
-};
+);
 
-export const createUser = async (req: Request, res: Response) => {
-  try {
+export const createUser: any = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
     const newUserData = User.create(req.body);
     await newUserData.save();
@@ -34,13 +30,8 @@ export const createUser = async (req: Request, res: Response) => {
         newUserData,
       },
     });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err,
-    });
   }
-};
+);
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
