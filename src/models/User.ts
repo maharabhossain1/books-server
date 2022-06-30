@@ -18,6 +18,7 @@ import {
   MinLength,
 } from "class-validator";
 import { Books } from "./Books";
+import { ShareBooks } from "./ShareBooks";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -58,6 +59,12 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Books, (books) => books.user)
   books: Books[];
+
+  @OneToMany(() => ShareBooks, (shared) => shared.target_user)
+  books_shared_with_user: Books[];
+
+  @OneToMany(() => ShareBooks, (shared) => shared.sender)
+  books_shared_by_user: Books[];
 
   @CreateDateColumn()
   created_at: Date;

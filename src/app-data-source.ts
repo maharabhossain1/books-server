@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { User } from "./models/User";
 import { Books } from "./models/Books";
+import { ShareBooks } from "./models/ShareBooks";
 
 export const myDataSource = new DataSource({
   type: "postgres",
@@ -11,5 +12,5 @@ export const myDataSource = new DataSource({
   database: "greetachtask",
 
   synchronize: true,
-  entities: [User, Books],
+  entities: [User, Books, ShareBooks],
 });

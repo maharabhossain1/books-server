@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../utils/catchAsync";
 import { User } from "../models/User";
 
+// Get ALL User
 export const getAllUsers: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
@@ -18,6 +19,7 @@ export const getAllUsers: any = catchAsync(
   }
 );
 
+// Create A User
 export const createUser: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
@@ -33,8 +35,9 @@ export const createUser: any = catchAsync(
   }
 );
 
-export const updateUser = async (req: Request, res: Response) => {
-  try {
+// Update A User
+export const updateUser: any = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
     const findUser = await User.findOneBy({
       id: Number(req.params.id),
@@ -52,16 +55,12 @@ export const updateUser = async (req: Request, res: Response) => {
         },
       });
     }
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err,
-    });
   }
-};
+);
 
-export const deleteUser = async (req: Request, res: Response) => {
-  try {
+// Delete A User
+export const deleteUser: any = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
     const findUser = await User.findOneBy({
       id: Number(req.params.id),
@@ -79,10 +78,5 @@ export const deleteUser = async (req: Request, res: Response) => {
         },
       });
     }
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err,
-    });
   }
-};
+);

@@ -7,7 +7,9 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
+import { ShareBooks } from "./ShareBooks";
 import { User } from "./User";
 
 @Entity("books")
@@ -34,6 +36,10 @@ export class Books extends BaseEntity {
   })
   user: User;
 
+  // making a relation with share Books table
+  @OneToMany(() => ShareBooks, (books) => books.book)
+  share: ShareBooks[];
+  
   @CreateDateColumn()
   created_at: Date;
 
