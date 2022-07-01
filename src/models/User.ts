@@ -27,9 +27,6 @@ export class User extends BaseEntity {
 
   @Column({ nullable: false })
   @IsDefined()
-  @MaxLength(50, {
-    message: "Title is too long",
-  })
   first_name: string;
 
   @Column({ nullable: false })

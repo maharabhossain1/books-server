@@ -59,6 +59,8 @@ export const updateUser: any = catchAsync(
     // Condition an response sent
     if (!findUser) {
       return next(new AppError("No User found with that ID", 404));
+    } else if (Object.keys(req.body).length === 0) {
+      return next(new AppError("Please Insert Data ", 404));
     } else {
       const result = await User.merge(findUser, req.body).save(findUser);
       res.status(200).json({
