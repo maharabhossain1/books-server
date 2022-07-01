@@ -1,6 +1,7 @@
 import express from "express";
 import { myDataSource } from "./app-data-source";
 import { router as userRoutes } from "./routes/userRoutes";
+import { router as booksRoutes } from "./routes/booksRoutes";
 import dotenv from "dotenv";
 import { globalErrorHandler } from "./controllers/errorController";
 
@@ -23,7 +24,7 @@ app.use(express.json());
 
 //  ROUTES
 app.use("/api", userRoutes);
-// app.use("/api/v1/users", userRouter);
+app.use("/api", booksRoutes);
 
 app.use(globalErrorHandler);
 
