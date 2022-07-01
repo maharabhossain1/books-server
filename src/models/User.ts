@@ -77,7 +77,10 @@ export class User extends BaseEntity {
   @BeforeUpdate()
   async validate() {
     await validateOrReject(this).catch((errors) => {
-      console.log("Promise rejected (validation failed). Errors: ", errors);
+      console.log(
+        "Promise rejected (validation failed). Errors: ",
+        errors.message
+      );
     });
   }
 }

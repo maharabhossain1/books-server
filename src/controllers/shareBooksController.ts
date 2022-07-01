@@ -2,14 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import { ShareBooks } from "../models/ShareBooks";
 import { catchAsync } from "../utils/catchAsync";
 
+// Create a Share
 export const createShare: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
-
     const newShareData = await ShareBooks.create(req.body);
-
     await newShareData.save();
 
+    // SEND RESPONSE
     res.status(200).json({
       status: "success",
       data: {
@@ -19,12 +19,14 @@ export const createShare: any = catchAsync(
   }
 );
 
-// Get all Books
+// Get all Shares
 export const getAllShare: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    // EXECUTE QUERY
     const books = await ShareBooks.find({
       where: req.query,
     });
+
     // SEND RESPONSE
     res.status(200).json({
       status: "success",
@@ -35,9 +37,11 @@ export const getAllShare: any = catchAsync(
     });
   }
 );
-// Get all Books
+
+// Get ALL shared Data BY USER
 export const getAllShareBooksByUser: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    // EXECUTE QUERY
     const books = await ShareBooks.find({
       select: {
         id: true,
@@ -50,7 +54,7 @@ export const getAllShareBooksByUser: any = catchAsync(
         book: true,
       },
     });
-    console.log(books);
+
     // SEND RESPONSE
     res.status(200).json({
       status: "success",
@@ -61,9 +65,11 @@ export const getAllShareBooksByUser: any = catchAsync(
     });
   }
 );
-// Get all Books
+
+// Get all Shared With USER Data
 export const getAllShareBooksWithUser: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    // EXECUTE QUERY
     const books = await ShareBooks.find({
       select: {
         id: true,
@@ -76,7 +82,7 @@ export const getAllShareBooksWithUser: any = catchAsync(
         book: true,
       },
     });
-    console.log(books);
+
     // SEND RESPONSE
     res.status(200).json({
       status: "success",

@@ -14,12 +14,14 @@ const sendErrorProd = (err: AppError, res: Response) => {
     // Programming or other unknown error: don't leak error details
   } else {
     // 1) Log error
-    console.error("ERROR 💥", err);
+    console.error("ERROR Message💥", err.message);
+    console.error("ERROR Name💥", err);
 
     // 2) Send generic message
     res.status(500).json({
       status: "error",
-      message: "Something went very wrong!",
+      warning: "Something went very wrong!",
+      message: err.message,
     });
   }
 };
@@ -30,20 +32,12 @@ export const globalErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  // console.log(err.stack);
-
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
-
-  //   if (process.env.NODE_ENV === "development") {
-  //     sendErrorDev(err, res);
-  //   } else if (process.env.NODE_ENV === "production") {
-  let error = { ...err };
 
   //   if (error.name === "CastError") error = handleCastErrorDB(error);
   //   if (error.code === 11000) error = handleDuplicateFieldsDB(error);
   //   if (error.name === "ValidationError") error = handleValidationErrorDB(error);
 
-  sendErrorProd(error, res);
-  //   }
+  sendErrorProd(err, res);
 };
