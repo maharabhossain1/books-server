@@ -30,9 +30,6 @@ export class User extends BaseEntity {
   @MaxLength(50, {
     message: "Title is too long",
   })
-  @MinLength(5, {
-    message: "Title is too short",
-  })
   first_name: string;
 
   @Column({ nullable: false })

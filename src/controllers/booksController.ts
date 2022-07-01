@@ -17,14 +17,14 @@ export const getAllBooks: any = catchAsync(
       },
     });
   }
-  //   }
 );
 
 // Create A User
 export const createBooks: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
-    const newBooksData = Books.create(req.body);
+    const newBooksData = await Books.create(req.body);
+    console.log(newBooksData);
     await newBooksData.save();
 
     res.status(200).json({

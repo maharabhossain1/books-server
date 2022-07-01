@@ -39,12 +39,12 @@ export class Books extends BaseEntity {
   user: User;
 
   // making a relation with share Books table
-  @OneToMany(() => ShareBooks, (books) => books.book)
+  @OneToMany(() => ShareBooks, (item) => item.book)
   share: ShareBooks[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   created_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updated_at: Date;
 }

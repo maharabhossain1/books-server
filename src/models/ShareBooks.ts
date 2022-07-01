@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  PrimaryColumn,
 } from "typeorm";
 import { Books } from "./Books";
 import { User } from "./User";
@@ -17,13 +18,20 @@ export class ShareBooks extends BaseEntity {
   id: number;
 
   //  relations with the BOOKS TABLE
-  @ManyToOne(() => Books, (books) => books.share)
+
+  @Column()
+  book_id: number;
+  @ManyToOne(() => Books, (books) => books.share, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({
     name: "book_id",
   })
   book: Books;
 
   // relation with USER TABLE who shared the books
+  @Column()
+  sender_id: number;
   @ManyToOne(() => User, (user) => user.books_shared_by_user)
   @JoinColumn({
     name: "sender_id",
@@ -31,6 +39,8 @@ export class ShareBooks extends BaseEntity {
   sender: User;
 
   // relation with USER TABLE  whom to share the book
+  @Column()
+  target_user_id: number;
   @ManyToOne(() => User, (user) => user.books_shared_with_user)
   @JoinColumn({
     name: "target_user_id",
