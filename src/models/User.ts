@@ -60,10 +60,14 @@ export class User extends BaseEntity {
   @OneToMany(() => Books, (books) => books.user)
   books: Books[];
 
-  @OneToMany(() => ShareBooks, (shared) => shared.target_user)
+  @OneToMany(() => ShareBooks, (shared) => shared.target_user, {
+    cascade: true,
+  })
   books_shared_with_user: Books[];
 
-  @OneToMany(() => ShareBooks, (shared) => shared.sender)
+  @OneToMany(() => ShareBooks, (shared) => shared.sender, {
+    cascade: true,
+  })
   books_shared_by_user: Books[];
 
   @CreateDateColumn()

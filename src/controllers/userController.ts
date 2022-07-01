@@ -6,7 +6,9 @@ import { User } from "../models/User";
 export const getAllUsers: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
-    const users = await User.find();
+    const users = await User.find({
+      where: req.query,
+    });
 
     // SEND RESPONSE
     res.status(200).json({

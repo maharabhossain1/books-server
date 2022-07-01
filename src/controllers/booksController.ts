@@ -5,8 +5,9 @@ import { catchAsync } from "../utils/catchAsync";
 // Get all Books
 export const getAllBooks: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const books = await Books.find();
-
+    const books = await Books.find({
+      where: req.query,
+    });
     // SEND RESPONSE
     res.status(200).json({
       status: "success",
@@ -16,6 +17,7 @@ export const getAllBooks: any = catchAsync(
       },
     });
   }
+  //   }
 );
 
 // Create A User

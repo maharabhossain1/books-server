@@ -30,7 +30,9 @@ export class Books extends BaseEntity {
   category: string;
 
   // making relations with the users table
-  @ManyToOne(() => User, (user) => user.books)
+  @ManyToOne(() => User, (user) => user.books, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({
     name: "user_id",
   })
@@ -39,7 +41,7 @@ export class Books extends BaseEntity {
   // making a relation with share Books table
   @OneToMany(() => ShareBooks, (books) => books.book)
   share: ShareBooks[];
-  
+
   @CreateDateColumn()
   created_at: Date;
 
