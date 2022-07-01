@@ -28,6 +28,7 @@ app.use("/api", userRoutes);
 app.use("/api", booksRoutes);
 app.use("/api", shareBooksRoutes);
 
+// Global ERROR HANDLER MIDDLEWARE
 app.use(globalErrorHandler);
 
 // creating port and listen
