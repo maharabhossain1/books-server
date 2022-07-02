@@ -1,4 +1,5 @@
 import express from "express";
+import { checkAuth } from "../middleware/checkAuth";
 import {
   createShare,
   getAllShare,
@@ -8,8 +9,16 @@ import {
 
 export const router = express.Router();
 
-router.route("/share_books").get(getAllShare).post(createShare);
-router.route("/share_books/share_by_user/:id").get(getAllShareBooksByUser);
-router.route("/share_books/share_with_user/:id").get(getAllShareBooksWithUser);
+router
+  .route("/share_books")
+  .get(checkAuth, getAllShare)
+  .post(checkAuth, createShare);
 
-// router.route("/books/:id").put(updateBook).delete(deleteBook);
+router
+  .route("/share_books/share_by_user/:id")
+  .get(checkAuth, getAllShareBooksByUser);
+
+router
+  .route("/share_books/share_with_user/:id")
+  .get(checkAuth, getAllShareBooksWithUser);
+

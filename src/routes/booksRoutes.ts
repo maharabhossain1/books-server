@@ -1,4 +1,5 @@
 import express from "express";
+import { checkAuth } from "../middleware/checkAuth";
 import {
   createBooks,
   deleteBook,
@@ -8,6 +9,9 @@ import {
 
 export const router = express.Router();
 
-router.route("/books").get(getAllBooks).post(createBooks);
+router.route("/books").get(checkAuth, getAllBooks).post(checkAuth, createBooks);
 
-router.route("/books/:id").put(updateBook).delete(deleteBook);
+router
+  .route("/books/:id")
+  .put(checkAuth, updateBook)
+  .delete(checkAuth, deleteBook);

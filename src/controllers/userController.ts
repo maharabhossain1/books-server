@@ -1,7 +1,69 @@
 import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+
 import { catchAsync } from "../utils/catchAsync";
 import { User } from "../models/User";
 import { AppError } from "../utils/error";
+
+// Login user
+export const loginUser: any = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password, user_name } = req.body;
+    if ((!email && !user_name) || !password) {
+      return next(
+        new AppError("Please provide email or user_name and password", 400)
+      );
+    }
+
+    // find user by email or user_name
+    let user;
+    if (email) {
+      user = await User.findOneBy({
+        email,
+      });
+    } else {
+      user = await User.findOneBy({
+        user_name,
+      });
+    }
+    // Check if user exists
+    if (!user) {
+      return next(
+        new AppError(
+          "Authentication Fail Please input correct Email or User_name And Password",
+          401
+        )
+      );
+    }
+
+    // Check if password is correct
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return next(
+        new AppError(
+          "Authentication Fail Please input correct Email or User_name And Password",
+          401
+        )
+      );
+    }
+
+    // Create JWT Payload
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN as string,
+      }
+    );
+    // SEND RESPONSE
+    res.status(200).json({
+      status: "success",
+      token,
+      message: "Login Successfully",
+    });
+  }
+);
 
 // Get ALL User
 export const getAllUsers: any = catchAsync(
@@ -35,15 +97,28 @@ export const createUser: any = catchAsync(
       return next(new AppError("Please Insert Data ", 404));
     }
 
-    const newUserData = User.create(req.body);
+    // Processing the password
+    const hashPassword = await bcrypt.hash(req.body.password, 12);
+    const newUserData = User.create({
+      ...req.body,
+      password: hashPassword,
+    });
+
+    // Token Generation
+    const token = jwt.sign(
+      { id: newUserData.id, email: newUserData.email },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN as string,
+      }
+    );
     await newUserData.save();
 
     // SEND RESPONSE
     res.status(200).json({
       status: "success",
-      data: {
-        newUserData,
-      },
+      token,
+      message: "Signup Successfully",
     });
   }
 );

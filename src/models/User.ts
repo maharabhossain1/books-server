@@ -35,6 +35,7 @@ export class User extends BaseEntity {
 
   @Column({
     unique: true,
+    nullable: false,
   })
   @IsDefined()
   @IsEmail()
@@ -64,10 +65,10 @@ export class User extends BaseEntity {
   })
   books_shared_by_user: Books[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   created_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updated_at: Date;
 
   @BeforeInsert()
