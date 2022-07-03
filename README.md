@@ -39,3 +39,7 @@ JWT_EXPIRES_IN=10hr
 ```bash
   npm run dev
 ```
+
+### Data Base Design
+
+![Db_Design](DB_Design.png)

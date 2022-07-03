@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { AppError } from "../utils/error";
 import { ShareBooks } from "../models/ShareBooks";
 import { catchAsync } from "../utils/catchAsync";
 
@@ -6,6 +7,9 @@ import { catchAsync } from "../utils/catchAsync";
 export const createShare: any = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // EXECUTE QUERY
+    if (Object.keys(req.body).length === 0) {
+      return next(new AppError("Please Insert Data ", 404));
+    }
     const newShareData = await ShareBooks.create(req.body);
     await newShareData.save();
 
@@ -26,7 +30,9 @@ export const getAllShare: any = catchAsync(
     const books = await ShareBooks.find({
       where: req.query,
     });
-
+    if (books.length === 0) {
+      return next(new AppError("No Shared Books found with that ID", 404));
+    }
     // SEND RESPONSE
     res.status(200).json({
       status: "success",
@@ -54,6 +60,9 @@ export const getAllShareBooksByUser: any = catchAsync(
         book: true,
       },
     });
+    if (books.length === 0) {
+      return next(new AppError("No Shared Books found with that ID", 404));
+    }
 
     // SEND RESPONSE
     res.status(200).json({
@@ -82,7 +91,9 @@ export const getAllShareBooksWithUser: any = catchAsync(
         book: true,
       },
     });
-
+    if (books.length === 0) {
+      return next(new AppError("No Shared Books found with that ID", 404));
+    }
     // SEND RESPONSE
     res.status(200).json({
       status: "success",
