@@ -32,7 +32,9 @@ export class ShareBooks extends BaseEntity {
   // relation with USER TABLE who shared the books
   @Column()
   sender_id: number;
-  @ManyToOne(() => User, (user) => user.books_shared_by_user)
+  @ManyToOne(() => User, (user) => user.books_shared_by_user, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({
     name: "sender_id",
   })
@@ -41,7 +43,9 @@ export class ShareBooks extends BaseEntity {
   // relation with USER TABLE  whom to share the book
   @Column()
   target_user_id: number;
-  @ManyToOne(() => User, (user) => user.books_shared_with_user)
+  @ManyToOne(() => User, (user) => user.books_shared_with_user, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({
     name: "target_user_id",
   })
