@@ -6,6 +6,7 @@ import { catchAsync } from "../utils/catchAsync";
 import { User } from "../models/User";
 import { AppError } from "../utils/error";
 import { handleValidationErr } from "../utils/handleValidationErr";
+import { validate } from "class-validator";
 
 // Login user
 export const loginUser: any = catchAsync(
@@ -106,7 +107,10 @@ export const createUser: any = catchAsync(
     });
 
     // Validate the data
-    await handleValidationErr(newUserData, next);
+    const errors = await validate(newUserData);
+    if (errors.length > 0) {
+      handleValidationErr(errors, next);
+    }
 
     // Token Generation
     const token = jwt.sign(
