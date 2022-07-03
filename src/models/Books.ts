@@ -1,3 +1,4 @@
+import { IsDefined, IsNotEmpty } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -18,9 +19,13 @@ export class Books extends BaseEntity {
   id: number;
 
   @Column()
+  @IsDefined()
+  @IsNotEmpty()
   user_id: number;
 
   @Column()
+  @IsDefined()
+  @IsNotEmpty()
   book_name: string;
 
   @Column()

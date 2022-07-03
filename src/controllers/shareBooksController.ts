@@ -67,6 +67,7 @@ export const getAllShare: any = catchAsync(
     if (books.length === 0) {
       return next(new AppError("No Shared Books found with that ID", 404));
     }
+
     // SEND RESPONSE
     res.status(200).json({
       status: "success",

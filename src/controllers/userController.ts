@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { catchAsync } from "../utils/catchAsync";
 import { User } from "../models/User";
 import { AppError } from "../utils/error";
+import { handleValidationErr } from "../utils/handleValidationErr";
 
 // Login user
 export const loginUser: any = catchAsync(
@@ -104,6 +105,9 @@ export const createUser: any = catchAsync(
       password: hashPassword,
     });
 
+    // Validate the data
+    await handleValidationErr(newUserData, next);
+
     // Token Generation
     const token = jwt.sign(
       { id: newUserData.id, email: newUserData.email },
@@ -137,7 +141,14 @@ export const updateUser: any = catchAsync(
     } else if (Object.keys(req.body).length === 0) {
       return next(new AppError("Please Insert Data ", 404));
     } else {
-      const result = await User.merge(findUser, req.body).save(findUser);
+      // Processing the password
+      const hashPassword = await bcrypt.hash(req.body.password, 12);
+      const result = await User.merge(findUser, {
+        ...req.body,
+        password: hashPassword,
+      }).save(findUser);
+
+      // SEND RESPONSE
       res.status(200).json({
         status: "success",
         data: {

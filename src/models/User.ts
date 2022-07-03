@@ -5,7 +5,6 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
   OneToMany,
   BeforeInsert,
   BeforeUpdate,
@@ -16,6 +15,7 @@ import {
   IsDefined,
   MaxLength,
   MinLength,
+  IsNotEmpty,
 } from "class-validator";
 import { Books } from "./Books";
 import { ShareBooks } from "./ShareBooks";
@@ -27,10 +27,12 @@ export class User extends BaseEntity {
 
   @Column({ nullable: false })
   @IsDefined()
+  @IsNotEmpty()
   first_name: string;
 
   @Column({ nullable: false })
   @IsDefined()
+  @IsNotEmpty()
   last_name: string;
 
   @Column({
@@ -46,10 +48,12 @@ export class User extends BaseEntity {
     nullable: false,
   })
   @IsDefined()
+  @IsNotEmpty()
   user_name: string;
 
   @Column({ nullable: false })
   @IsDefined()
+  @IsNotEmpty()
   password: string;
 
   @OneToMany(() => Books, (books) => books.user)
@@ -75,10 +79,7 @@ export class User extends BaseEntity {
   @BeforeUpdate()
   async validate() {
     await validateOrReject(this).catch((errors) => {
-      console.log(
-        "Promise rejected (validation failed). Errors: ",
-        errors.message
-      );
+      console.log("Promise rejected (validation failed). Errors: ", errors);
     });
   }
 }

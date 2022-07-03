@@ -9,6 +9,7 @@ import {
 } from "../controllers/userController";
 
 export const router = express.Router();
+
 router.route("/signup").post(createUser);
 router.route("/login").post(loginUser);
 router.route("/users").get(checkAuth, getAllUsers);

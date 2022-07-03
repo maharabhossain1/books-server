@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/error";
 import { Books } from "../models/Books";
 import { catchAsync } from "../utils/catchAsync";
+import { handleValidationErr } from "../utils/handleValidationErr";
+import { validate } from "class-validator";
 
 // Get all Books
 export const getAllBooks: any = catchAsync(
@@ -32,14 +34,20 @@ export const createBooks: any = catchAsync(
     }
 
     const newBooksData = await Books.create(req.body);
-    await newBooksData.save();
+    // Validate the data
+    const errors = await validate(newBooksData);
+    if (errors.length > 0) {
+      handleValidationErr(errors, next);
+    } else {
+      await newBooksData.save();
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        newBooksData,
-      },
-    });
+      res.status(200).json({
+        status: "success",
+        data: {
+          newBooksData,
+        },
+      });
+    }
   }
 );
 

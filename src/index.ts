@@ -5,6 +5,7 @@ import { router as booksRoutes } from "./routes/booksRoutes";
 import { router as shareBooksRoutes } from "./routes/shareBooksRoutes";
 import dotenv from "dotenv";
 import { globalErrorHandler } from "./controllers/errorController";
+import { AppError } from "./utils/error";
 
 // env config
 dotenv.config({ path: ".env" });
@@ -27,6 +28,11 @@ app.use(express.json());
 app.use("/api", userRoutes);
 app.use("/api", booksRoutes);
 app.use("/api", shareBooksRoutes);
+
+// 404 Error
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
 
 // Global ERROR HANDLER MIDDLEWARE
 app.use(globalErrorHandler);

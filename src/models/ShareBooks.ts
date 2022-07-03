@@ -18,7 +18,6 @@ export class ShareBooks extends BaseEntity {
   id: number;
 
   //  relations with the BOOKS TABLE
-
   @Column()
   book_id: number;
   @ManyToOne(() => Books, (books) => books.share, {

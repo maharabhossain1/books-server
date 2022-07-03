@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from "../utils/error";
 
 // Error Handling for Production
-
 const sendErrorProd = (err: AppError, res: Response) => {
   // Operational, trusted error: send message to client
   if (err.isOperational) {
@@ -10,8 +9,6 @@ const sendErrorProd = (err: AppError, res: Response) => {
       status: err.status,
       message: err.message,
     });
-
-    // Programming or other unknown error: don't leak error details
   } else {
     // 1) Log error
     console.error("ERROR Message💥", err.message);
@@ -21,11 +18,23 @@ const sendErrorProd = (err: AppError, res: Response) => {
     res.status(500).json({
       status: "error",
       warning: "Something went very wrong!",
-      message: err.message,
+      message: err.name,
     });
   }
 };
 
+// Query Type Error
+const handleQueryFailedError = (err: AppError, res: Response) => {
+  const error: any = { ...err };
+
+  res.status(500).json({
+    status: "error",
+    warning: "Something went very wrong!",
+    message: error.detail,
+  });
+};
+
+// Error Handling Global Error Handler
 export const globalErrorHandler = (
   err: AppError,
   req: Request,
@@ -35,9 +44,7 @@ export const globalErrorHandler = (
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
-  //   if (error.name === "CastError") error = handleCastErrorDB(error);
-  //   if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-  //   if (error.name === "ValidationError") error = handleValidationErrorDB(error);
+  if (err.name === "QueryFailedError") return handleQueryFailedError(err, res);
 
   sendErrorProd(err, res);
 };
