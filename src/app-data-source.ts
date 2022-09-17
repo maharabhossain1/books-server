@@ -9,6 +9,7 @@ import { ShareBooks } from "./models/ShareBooks";
 dotenv.config({ path: ".env" });
 
 export const myDataSource = new DataSource({
+  url: process.env.DATABASE_URL,
   type: "postgres",
   host: `${process.env.DB_HOST}`,
   port: Number(`${process.env.DB_PORT}`),
@@ -18,4 +19,7 @@ export const myDataSource = new DataSource({
 
   synchronize: true,
   entities: [User, Books, ShareBooks],
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
